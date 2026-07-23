@@ -1,2 +1,2 @@
-# maps-location-service
-maps/location microservice for CS 361 
+# map-location-service
+map/location microservice for CS 361 
