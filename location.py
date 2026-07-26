@@ -1,28 +1,26 @@
 import zmq
 
-def get_location_data(request):
+def get_location_data(query):
     pass
 
 
 def main():
-    # set up ZeroMQ
     context = zmq.Context()
     socket = context.socket(zmq.REP)
-    socket.bind("tcp://*:[3010]")
+    socket.bind("tcp://*:3010") 
     
-    print("Map/Location Service is running...")
+    print("Map/Location Service is running on port 3010...")
+    print("Waiting for requests...") # message to show the service is running and waiting for requests
     
     while True:
-        # wait for request
-        message = socket.recv_string()
-        print(f"Received request: {message}")
+        request = socket.recv_json()
+        print(f"Received: {request}") # prints json request from the client
         
-        # process request
-        response = get_location_data(message)
+        query = request.get("query") # location query from the request eg) "Paris, France"
+        response = get_location_data(query)
         
-        # send response
-        socket.send_string(response)
-        print(f"Sent response: {response}")
+        socket.send_json(response)
+        print(f"Sent: {response}")
 
 if __name__ == "__main__":
     main()
