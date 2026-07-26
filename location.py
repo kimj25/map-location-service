@@ -11,7 +11,7 @@ def get_location_data(query):
     geolocator = Nominatim(user_agent="map_location_service")
     
     # get location's coordinates from any input format (address, city, country, etc.)
-    location = geolocator.geocode(query)
+    location = geolocator.geocode(query, addressdetails=True, extratags=True)
     
     # if location not found, return error
     if location is None:
@@ -31,12 +31,21 @@ def get_location_data(query):
     # build map URL from coordinates
     map_url = f"https://www.google.com/maps?q={latitude},{longitude}"
     
-    # return response as dictionary
+    # extract address details and extratags from raw response
+    address = location.raw.get("address", {})
+    extratags = location.raw.get("extratags", {})
+    
+    # return response as dictionary, each program can use the response dictionary to extract the required information
     return {
         "latitude": latitude,
         "longitude": longitude,
         "timezone": timezone,
-        "map_url": map_url
+        "map_url": map_url,
+        "city": address.get("city"),
+        "state": address.get("state"),
+        "postcode": address.get("postcode"),
+        "country": address.get("country"),
+        "wikipedia": extratags.get("wikipedia")
     }
 
 
@@ -55,7 +64,7 @@ def main():
         query = request.get("query") # get location from the request query eg) "Paris, France"
         response = get_location_data(query) # call the get_location_data function to get the location data based on the query
         
-        socket.send_json(response) # send the response back to the client
+        socket.send_json(response) # send the response in json back to the client
         print(f"Sent: {response}")
 
 if __name__ == "__main__":
