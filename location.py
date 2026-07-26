@@ -1,4 +1,6 @@
 import zmq
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
@@ -26,7 +28,8 @@ def get_location_data(query):
 
     # get timezone from coordinates
     tf = TimezoneFinder()
-    timezone = tf.timezone_at(lat=latitude, lng=longitude)
+    timezone_str = tf.timezone_at(lat=latitude, lng=longitude)
+    timezone_abbrev = datetime.now(ZoneInfo(timezone_str)).strftime('%Z')
     
     # build map URL from coordinates
     map_url = f"https://www.google.com/maps?q={latitude},{longitude}"
@@ -39,7 +42,7 @@ def get_location_data(query):
     return {
         "latitude": latitude,
         "longitude": longitude,
-        "timezone": timezone,
+        "timezone": timezone_abbrev,
         "map_url": map_url,
         "city": address.get("city"),
         "state": address.get("state"),
