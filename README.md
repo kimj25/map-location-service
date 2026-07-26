@@ -1,5 +1,5 @@
 # map-location-service
-Map/location microservice. Takes a location query (address, city, country, etc.) and returns coordinates, timezone, address details, and a Google Maps URL via ZeroMQ.
+Map/location microservice. Takes a location query (address, city, country, etc.) and returns coordinates, timezone (IANA), address details, and a Google Maps URL via ZeroMQ.
 
 The service responds with JSON over ZeroMQ.
 
