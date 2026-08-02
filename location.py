@@ -26,11 +26,18 @@ def get_location_data(query):
     print(location.address)
     print((latitude, longitude))
 
+
     # get timezone from coordinates
     tf = TimezoneFinder()
     timezone_str = tf.timezone_at(lat=latitude, lng=longitude)
+
     # get timezone abbreviation (e.g., PST, EST, etc.)
-    timezone_abbrev = datetime.now(ZoneInfo(timezone_str)).strftime('%Z')
+    if timezone_str:
+        timezone_abbrev = datetime.now(
+            ZoneInfo(timezone_str)
+        ).strftime("%Z")
+    else:
+        timezone_abbrev = "Unknown"
 
     # build map URL from coordinates
     map_url = f"https://www.google.com/maps?q={latitude},{longitude}"
@@ -52,7 +59,7 @@ def get_location_data(query):
 
 
 def main():
-    """Main function to run the ZeroMQ server 
+    """Main function to run the ZeroMQ server
     that listens for location queries and responds with location data."""
     context = zmq.Context()
     socket = context.socket(zmq.REP)
@@ -68,6 +75,10 @@ def main():
 
         query = request.get("query") # get location from the request query eg) "Paris, France"
         # call the get_location_data function to get the location data based on the query
+        if not query:
+            socket.send_json({"error": "Missing required field: query"})
+            continue
+
         response = get_location_data(query)
 
         socket.send_json(response) # send the response in json back to the client
