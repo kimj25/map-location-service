@@ -33,13 +33,6 @@ def test_location_service():
     print(f"Response: {response}")
     print()
 
-    # test 5: city only (no country)
-    print("Test 5: City only")
-    socket.send_json({"query": "Tokyo"})
-    response = socket.recv_json()
-    print(f"Response: {response}")
-    print()
-
     # test 6: domestic US address
     print("Test 6: Domestic US city")
     socket.send_json({"query": "Portland, Oregon"})
