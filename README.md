@@ -56,9 +56,27 @@ response = socket.recv_json()
 print(response)
 ```
 ## UML Sequence Diagram
-```mermaid
 sequenceDiagram
     participant MP as Main Program
     participant MLS as Map/Location Service
-    ...
-```
+    participant NOM as Nominatim API
+    participant TF as TimezoneFinder
+
+    MP->>MLS: send_json({"query": "Paris, France"})
+    MLS->>NOM: geocode("Paris, France")
+    
+    alt Location found
+        NOM-->>MLS: returns coordinates (lat, lng, address)
+        MLS->>TF: timezone_at(lat, lng)
+        TF-->>MLS: returns timezone string
+        MLS->>MLS: build map_url from coordinates
+        MLS-->>MP: send_json({latitude, longitude, timezone, map_url, city, ...})
+    else Location not found
+        NOM-->>MLS: returns None
+        MLS-->>MP: send_json({"error": "Location not found"})
+    else Network error
+        NOM-->>MLS: ConnectionError/TimeoutError
+        MLS-->>MP: send_json({"error": "Network error..."})
+    else Missing query
+        MLS-->>MP: send_json({"error": "Missing required field: query"})
+    end
