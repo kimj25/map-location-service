@@ -2,6 +2,7 @@
 Map/location microservice. Takes a location query (address, city, country, etc.) and returns coordinates, timezone, address details, and a Google Maps URL via ZeroMQ.
 
 The service responds with JSON over ZeroMQ.
+Needs internet connection - Nominatim geocoding API
 
 ## Dependencies
 ```
@@ -32,14 +33,14 @@ Send a JSON request with a `query` field containing any location string:
   "state": "Île-de-France",
   "postcode": "75001",
   "country": "France",
-  "wikipedia": "fr:Paris"
 }
 ```
 Note: Some fields may be `null` depending on the location (e.g., searching by country won't return a `city`).
 
 ### Error Response
 ```json
-{"error": "Location not found. Please try again."}
+{"error": "Missing required field: query"}
+{"error": "Network error: Please check your connection and try again."}
 ```
 
 ### Example (Python client)
@@ -53,4 +54,11 @@ socket.connect("tcp://localhost:3010")
 socket.send_json({"query": "Tokyo, Japan"})
 response = socket.recv_json()
 print(response)
+```
+## UML Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant MP as Main Program
+    participant MLS as Map/Location Service
+    ...
 ```
