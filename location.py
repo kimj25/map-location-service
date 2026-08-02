@@ -13,7 +13,11 @@ def get_location_data(query):
     geolocator = Nominatim(user_agent="map_location_service")
 
     # get location's coordinates from any input format (address, city, country, etc.)
-    location = geolocator.geocode(query, addressdetails=True, extratags=True)
+    try:
+        location = geolocator.geocode(query, addressdetails=True, extratags=True)
+    # raise error,  if there is a network error or timeout
+    except (ConnectionError, TimeoutError):
+        return {"error": "Network error: Please check your connection and try again."}
 
     # if location not found, return error
     if location is None:
