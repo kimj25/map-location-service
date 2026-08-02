@@ -56,6 +56,7 @@ response = socket.recv_json()
 print(response)
 ```
 ## UML Sequence Diagram
+```
 sequenceDiagram
     participant MP as Main Program
     participant MLS as Map/Location Service
@@ -80,3 +81,4 @@ sequenceDiagram
     else Missing query
         MLS-->>MP: send_json({"error": "Missing required field: query"})
     end
+```
