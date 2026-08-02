@@ -56,7 +56,9 @@ response = socket.recv_json()
 print(response)
 ```
 ## UML Sequence Diagram
-```
+## UML Sequence Diagram
+
+```mermaid
 sequenceDiagram
     participant MP as Main Program
     participant MLS as Map/Location Service
