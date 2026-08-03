@@ -56,7 +56,6 @@ response = socket.recv_json()
 print(response)
 ```
 ## UML Sequence Diagram
-## UML Sequence Diagram
 
 ```mermaid
 sequenceDiagram
