@@ -3,13 +3,13 @@ import zmq
 def test_location_service():
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
-    socket.connect("tcp://localhost:3010")
+    socket.connect("tcp://localhost:3010") # connects to the location service via 3010 port
 
     # test 1: valid city and country
     print("Test 1: Valid city and country")
-    socket.send_json({"query": "Paris, France"})
-    response = socket.recv_json()
-    print(f"Response: {response}")
+    socket.send_json({"query": "Paris, France"}) # send request to the location service
+    response = socket.recv_json()   # receive response from the location service
+    print(f"Response: {response}")  # shows the data
     print()
 
     # test 2: valid full address
